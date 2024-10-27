@@ -1,0 +1,28 @@
+name: Deploy Diagram to Camunda SaaS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy-diagram:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Push diagram to Camunda SaaS
+        env:
+          CAMUNDA_API_URL: ${{ secrets.CAMUNDA_API_URL }}
+          CAMUNDA_API_KEY: ${{ secrets.CAMUNDA_API_KEY }}
+        run: |
+          curl -X POST "$CAMUNDA_API_URL/v2/deployments" \
+          -H 'Content-Type: multipart/form-data' \
+          -H 'Accept: application/json
+          -H "Authorization: Bearer $CAMUNDA_API_KEY" \
+          -F "deployment-name=my-diagram-deployment" \
+          -F "webinar8.6.bpmn=src/main/resources/webinar8.6.bpmn"
