@@ -19,7 +19,7 @@ public class Main {
                 .build()) {
             deployResources(client);
             long processInstanceKey = createProcessInstance(client);
-            correlateOrPublishMessage(client, processInstanceKey + 1);
+            correlateOrPublishMessage(client, processInstanceKey);
         }
     }
 
@@ -48,15 +48,15 @@ public class Main {
 
         try {
             long instanceKey = client.newCorrelateMessageCommand()
-                    .messageName("abc")
-                    .correlationKey("123")
+                    .messageName("customerInformation")
+                    .correlationKey(String.valueOf(correlationKey))
                     .variables(variables)
                     .send().join().getProcessInstanceKey();
             System.out.println("Message correlated to instance: " + instanceKey);
         } catch (Exception e) {
             long messageKey = client.newPublishMessageCommand()
-                    .messageName("abc")
-                    .correlationKey("123")
+                    .messageName("customerInformation")
+                    .correlationKey(String.valueOf(correlationKey))
                     .variables(variables)
                     .timeToLive(Duration.ofHours(1))
                     .send().join().getMessageKey();
