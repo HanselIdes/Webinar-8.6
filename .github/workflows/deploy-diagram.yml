@@ -32,9 +32,9 @@ jobs:
 
       - name: Check zbctl status
         env:
-          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
-          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
-          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
+          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
           ZEEBE_AUTHORIZATION_SERVER_URL: ${{ secrets.ZEEBE_AUTHORIZATION_SERVER_URL }}
         run: |
           zbctl status --address $ZEEBE_ADDRESS --insecure --clientId $ZEEBE_CLIENT_ID --clientSecret $ZEEBE_CLIENT_SECRET
@@ -42,9 +42,9 @@ jobs:
             
       - name: Deploy BPMN to Zeebe
         env:
-          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
-          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
-          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
+          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
           zbctl deploy src/main/resources/webinar8.6.bpmn
