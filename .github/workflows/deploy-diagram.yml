@@ -9,7 +9,7 @@ on:
       - '**/*.bpmn'
   
   workflow_dispatch:
-    
+
 permissions:
   contents: read
   id-token: write
@@ -27,15 +27,21 @@ jobs:
           sudo apt-get update
           npm install -g zbctl
 
-      - name: Zeebe status
+      - name: Debug environment variables
+        run: |
+          echo "ZEEBE_CLIENT_ID is ${ZEEBE_CLIENT_ID:+"set"}"
+          echo "ZEEBE_CLIENT_SECRET is ${ZEEBE_CLIENT_SECRET:+"set"}"
+
+      - name: Check zbctl status
         env:
           ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
           ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
           ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
-          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+          ZEEBE_AUTHORIZATION_SERVER_URL: ${{ secrets.ZEEBE_AUTHORIZATION_SERVER_URL }}
         run: |
-          echo ${{ secrets.ZEEBE_ADDRESS }}
-          zbctl status
+          zbctl status --address $ZEEBE_ADDRESS --insecure --clientId $ZEEBE_CLIENT_ID --clientSecret $ZEEBE_CLIENT_SECRET
+            
+            
       - name: Deploy BPMN to Zeebe
         env:
           ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
