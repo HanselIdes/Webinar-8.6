@@ -48,5 +48,5 @@ jobs:
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
           ls ../../
-          zbctl deploy '../../src/main/resources/bank loan origination and processing.bpmn'
+          zbctl deploy '../src/main/resources/bank loan origination and processing.bpmn'
 
