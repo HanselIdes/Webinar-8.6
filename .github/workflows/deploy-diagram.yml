@@ -23,6 +23,15 @@ jobs:
           sudo apt-get update
           npm install -g zbctl
 
+      - name: Zeebe status
+        env:
+          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
+          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
+          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+        run: |
+          echo ${{ secrets.ZEEBE_ADDRESS }}
+          zbctl status
       - name: Deploy BPMN to Zeebe
         env:
           ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
@@ -30,6 +39,5 @@ jobs:
           ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
-          zbctl status
           zbctl deploy src/main/resources/webinar8.6.bpmn
 
