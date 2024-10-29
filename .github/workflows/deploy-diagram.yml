@@ -47,5 +47,5 @@ jobs:
           ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
-          zbctl deploy ./src/main/resources/webinar8.6.bpmn
+          zbctl deploy ../../src/main/resources/webinar8.6.bpmn
 
