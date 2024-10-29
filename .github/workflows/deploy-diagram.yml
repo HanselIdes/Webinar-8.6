@@ -20,7 +20,7 @@ jobs:
 
       - name: Set up zbctl
         run: |
-          apk update
+          sudo apt-get update
           npm install -g zbctl
 
       - name: Deploy BPMN to Zeebe
