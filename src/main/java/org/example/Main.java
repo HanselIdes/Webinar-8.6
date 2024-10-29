@@ -17,7 +17,7 @@ public class Main {
                 .restAddress(URI.create(configLoader.getProperty("ZEEBE_REST_ADDRESS")))
                 .credentialsProvider(credentialsProvider)
                 .build()) {
-            deployResources(client);
+            //deployResources(client);
             long processInstanceKey = createProcessInstance(client);
             correlateOrPublishMessage(client, processInstanceKey);
         }
