@@ -5,6 +5,9 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**/*.bpmn'
+  
   workflow_dispatch:
 
 jobs:
@@ -15,14 +18,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Push diagram to Camunda SaaS
-        env:
-          CAMUNDA_API_URL: ${{ secrets.CAMUNDA_API_URL }}
-          CAMUNDA_API_KEY: ${{ secrets.CAMUNDA_API_KEY }}
+      - name: Set up zbctl
         run: |
-          curl -X POST "$CAMUNDA_API_URL/v2/deployments" \
-          -H 'Content-Type: multipart/form-data' \
-          -H 'Accept: application/json
-          -H "Authorization: Bearer $CAMUNDA_API_KEY" \
-          -F "deployment-name=my-diagram-deployment" \
-          -F "webinar8.6.bpmn=src/main/resources/webinar8.6.bpmn"
+          apk update
+          npm install -g zbctl
+
+      - name: Deploy BPMN to Zeebe
+        env:
+          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
+          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
+          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+        run: |
+          zbctl status
+          zbctl deploy src/main/resources/webinar8.6.bpmn
+
