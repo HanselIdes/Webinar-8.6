@@ -9,6 +9,10 @@ on:
       - '**/*.bpmn'
   
   workflow_dispatch:
+    
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   deploy-diagram:
