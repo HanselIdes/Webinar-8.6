@@ -1,0 +1,53 @@
+name: Deploy Diagram to Camunda SaaS
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.bpmn'
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-diagram:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up zbctl
+        run: |
+          sudo apt-get update
+          npm install -g zbctl
+
+      - name: Debug environment variables
+        run: |
+          echo "ZEEBE_CLIENT_ID is ${ZEEBE_CLIENT_ID:+"set"}"
+          echo "ZEEBE_CLIENT_SECRET is ${ZEEBE_CLIENT_SECRET:+"set"}"
+
+      - name: Check zbctl status
+        env:
+          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
+          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
+          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_AUTHORIZATION_SERVER_URL: ${{ secrets.ZEEBE_AUTHORIZATION_SERVER_URL }}
+        run: |
+          zbctl status --address $ZEEBE_ADDRESS --insecure --clientId $ZEEBE_CLIENT_ID --clientSecret $ZEEBE_CLIENT_SECRET
+            
+            
+      - name: Deploy BPMN to Zeebe
+        env:
+          ZEEBE_ADDRESS: ${{ secrets.ZEEBE_ADDRESS }}
+          ZEEBE_CLIENT_ID: ${{ secrets.ZEEBE_CLIENT_ID }}
+          ZEEBE_CLIENT_SECRET: ${{ secrets.ZEEBE_CLIENT_SECRET }}
+          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+        run: |
+          zbctl deploy src/main/resources/webinar8.6.bpmn
+
