@@ -9,6 +9,8 @@ import io.camunda.zeebe.client.impl.oauth.OAuthCredentialsProvider;
 
 import java.net.URI;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class JobWorkerEL {
@@ -32,13 +34,13 @@ public class JobWorkerEL {
     }
 
     private static void openJobWorkers(ZeebeClient client) {
-        final String executionListenerType = "endEl";
+        final String executionListenerType = "startEl";
         final String jobWorkerType = "job";
 
         System.out.println("Opening job workers.");
 
-        try (JobWorker executionListenerWorker = createJobWorker(client, executionListenerType, new ExecutionListenerHandler());
-             JobWorker exampleWorker = createJobWorker(client, jobWorkerType, new ExampleJobHandler())) {
+        try (JobWorker executionListenerWorker = createJobWorker(client, executionListenerType, new ExecutionListenerHandler())){
+            // ; JobWorker exampleWorker = createJobWorker(client, jobWorkerType, new ExampleJobHandler())) {
 
             System.out.println("Job workers opened and receiving jobs.");
             waitUntilSystemInput("exit");
@@ -63,41 +65,18 @@ public class JobWorkerEL {
         }
     }
 
-    public static class Order {
-        private long orderId;
-        private double totalPrice;
 
-        public long getOrderId() {
-            return orderId;
-        }
-
-        public void setOrderId(final long orderId) {
-            this.orderId = orderId;
-        }
-
-        public double getTotalPrice() {
-            return totalPrice;
-        }
-
-        public void setTotalPrice(final double totalPrice) {
-            this.totalPrice = totalPrice;
-        }
-    }
 
     private static class ExecutionListenerHandler implements JobHandler {
         @Override
         public void handle(final JobClient client, final ActivatedJob job) {
-            Order order = job.getVariablesAsType(Order.class);
-            System.out.println("New job with orderId: " + order.getOrderId() + " for process instance: " + job.getProcessInstanceKey());
 
-            GetPrice getPriceInstance = new GetPrice();
-            getPriceInstance.fetchPrice();
-            double price = getPriceInstance.getPrice();
+            System.out.println("New job with creditScore: " + job.getVariable("creditScore") + " for process instance: " + job.getProcessInstanceKey());
 
-            System.out.println("The price fetched is: " + price);
-            order.setTotalPrice(price);
+            Map<String, Object> variables = new HashMap<>();
+            variables.put("additionalCheck", true);
 
-            client.newCompleteCommand(job.getKey()).variables(order).send().join();
+            client.newCompleteCommand(job.getKey()).variables(variables).send().join();
         }
     }
 

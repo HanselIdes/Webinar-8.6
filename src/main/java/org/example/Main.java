@@ -17,9 +17,12 @@ public class Main {
                 .restAddress(URI.create(configLoader.getProperty("ZEEBE_REST_ADDRESS")))
                 .credentialsProvider(credentialsProvider)
                 .build()) {
-            //deployResources(client);
-            long processInstanceKey = createProcessInstance(client);
-            correlateOrPublishMessage(client, processInstanceKey);
+            deployResources(client);
+
+            for (int i = 0; i < 5; i++) {
+                long processInstanceKey = createProcessInstance(client);
+                correlateOrPublishMessage(client, processInstanceKey);
+            }
         }
     }
 
@@ -34,29 +37,37 @@ public class Main {
     }
 
     private static long createProcessInstance(ZeebeClient client) {
+        Map<String, Object> var = new HashMap<>();
+        var.put("first_name", "Laya");
+        var.put("last_name", "Williams");
+        var.put("email", "laya.williams@mail.mail");
+        var.put("ticketId", "134-31-1679");
+
         var event = client.newCreateInstanceCommand()
                 .bpmnProcessId("loanOrigination")
                 .latestVersion()
-                .send().join();
+                .variables(var)
+                .send()
+                .join();
         System.out.println("Process instance created with key: " + event.getProcessInstanceKey());
         return event.getProcessInstanceKey();
     }
 
     private static void correlateOrPublishMessage(ZeebeClient client, long correlationKey) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("orderId", correlationKey);
+        variables.put("creditScore", 760);
 
         try {
             long instanceKey = client.newCorrelateMessageCommand()
                     .messageName("customerInformation")
-                    .correlationKey(String.valueOf(correlationKey))
+                    .correlationKey("134-31-1679")
                     .variables(variables)
                     .send().join().getProcessInstanceKey();
             System.out.println("Message correlated to instance: " + instanceKey);
         } catch (Exception e) {
             long messageKey = client.newPublishMessageCommand()
                     .messageName("customerInformation")
-                    .correlationKey(String.valueOf(correlationKey))
+                    .correlationKey("134-31-1679")
                     .variables(variables)
                     .timeToLive(Duration.ofHours(1))
                     .send().join().getMessageKey();

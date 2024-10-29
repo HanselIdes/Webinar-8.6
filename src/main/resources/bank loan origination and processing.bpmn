@@ -7,8 +7,6 @@
     <bpmn:participant id="Participant_0vl257o" name="Customer" />
     <bpmn:participant id="Participant_026s99h" name="Bank IT systems" />
     <bpmn:participant id="Participant_069kh4a" name="Chatbot" />
-    <bpmn:messageFlow id="Flow_0zbi9m1" sourceRef="getCreditScore" targetRef="Participant_10cw3k9" />
-    <bpmn:messageFlow id="Flow_0n8pccj" sourceRef="Participant_10cw3k9" targetRef="getCreditScore" />
     <bpmn:messageFlow id="Flow_09zzeg7" sourceRef="Participant_069kh4a" targetRef="loanRequested" />
     <bpmn:messageFlow id="Flow_0emvbnh" sourceRef="Activity_0ii025u" targetRef="Participant_0vl257o" />
     <bpmn:messageFlow id="Flow_04faq6r" sourceRef="ValidateDataAndCreateTicket" targetRef="Participant_026s99h" />
@@ -24,6 +22,7 @@
     <bpmn:messageFlow id="Flow_0kny3xj" sourceRef="Participant_069kh4a" targetRef="Participant_0vl257o" />
     <bpmn:messageFlow id="Flow_1rbcc7e" sourceRef="Participant_0vl257o" targetRef="Participant_069kh4a" />
     <bpmn:messageFlow id="Flow_1ntqrd8" sourceRef="Participant_069kh4a" targetRef="Participant_0vl257o" />
+    <bpmn:messageFlow id="Flow_01nbziz" sourceRef="Participant_10cw3k9" targetRef="Event_1c61boa" />
   </bpmn:collaboration>
   <bpmn:process id="loanOrigination" name="Bank: Loan origination and processing" isExecutable="true">
     <bpmn:sequenceFlow id="Flow_05vdl8x" sourceRef="Event_09ign1n" targetRef="Activity_0ii025u" />
@@ -33,20 +32,9 @@
     <bpmn:sequenceFlow id="Flow_0i2sxpr" sourceRef="Activity_0ehz785" targetRef="Event_1ym330b" />
     <bpmn:sequenceFlow id="Flow_0t0fgj1" sourceRef="Activity_0neec1e" targetRef="Event_09ign1n" />
     <bpmn:sequenceFlow id="Flow_14mj0nw" sourceRef="Activity_1qx00c8" targetRef="Activity_0ebp42o" />
-    <bpmn:sequenceFlow id="Flow_1myqvj5" sourceRef="loanRequested" targetRef="getCreditScore" />
     <bpmn:sequenceFlow id="Flow_1nyx4yp" sourceRef="Event_1ym330b" targetRef="Activity_1qx00c8" />
     <bpmn:sequenceFlow id="Flow_1q8k0ac" sourceRef="Activity_0ebp42o" targetRef="Event_0p71g2v" />
     <bpmn:sequenceFlow id="Flow_1ythlix" sourceRef="Event_0oxv702" targetRef="Event_1pq5rfu" />
-    <bpmn:serviceTask id="getCreditScore" name="Get credit score">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="job" />
-        <zeebe:properties>
-          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;creditScore&#34;: 760,&#10;  &#34;ticketId&#34;: 123&#10;}" />
-        </zeebe:properties>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1myqvj5</bpmn:incoming>
-      <bpmn:outgoing>Flow_1k7rao8</bpmn:outgoing>
-    </bpmn:serviceTask>
     <bpmn:startEvent id="loanRequested" name="loan requested">
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="Form_16l6p9i" />
@@ -54,7 +42,7 @@
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;address&#34;: {&#10;    &#34;first_name&#34;: &#34;Laya&#34;,&#10;    &#34;last_name&#34;: &#34;Williams&#34;,&#10;    &#34;address_1&#34;: &#34;123 Anywhere Dr&#34;,&#10;    &#34;address_2&#34;: &#34;&#34;,&#10;    &#34;city&#34;: &#34;Raleigh&#34;,&#10;    &#34;zip_code&#34;: &#34;27697&#34;,&#10;    &#34;state&#34;: &#34;North Carolina&#34;,&#10;    &#34;country&#34;: &#34;USA&#34;&#10;  },&#10;  &#34;contact&#34;: {&#10;    &#34;email&#34;: &#34;laya.williams@mail.mail&#34;,&#10;    &#34;phone&#34;: &#34;+4930664040900&#34;,&#10;    &#34;mobile&#34;: &#34;+4930664040900&#34;&#10;  },&#10;  &#34;pi&#34;: {&#10;    &#34;ssn&#34;: &#34;134-31-1679&#34;,&#10;    &#34;date_of_birth&#34;: null,&#10;    &#34;annual_salary&#34;: 55200,&#10;    &#34;current_employer&#34;: &#34;Styles and Speed Printing LLC.&#34;&#10;  },&#10;  &#34;loan&#34;: {&#10;    &#34;amount&#34;: 25000,&#10;    &#34;tenure&#34;: 36&#10;  }&#10;}" />
         </zeebe:properties>
       </bpmn:extensionElements>
-      <bpmn:outgoing>Flow_1myqvj5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_145cnel</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_1uqps3a" name="Yes" sourceRef="Gateway_0h8t0o8" targetRef="ValidateDataAndCreateTicket">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = false</bpmn:conditionExpression>
@@ -273,8 +261,13 @@
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:exclusiveGateway id="Gateway_0odman6" name="Do we need more data?">
+      <bpmn:extensionElements>
+        <zeebe:executionListeners>
+          <zeebe:executionListener eventType="start" type="startEl" />
+        </zeebe:executionListeners>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_12o7iz6</bpmn:incoming>
-      <bpmn:incoming>Flow_1k7rao8</bpmn:incoming>
+      <bpmn:incoming>Flow_1rybhfo</bpmn:incoming>
       <bpmn:outgoing>Flow_0gr6q5q</bpmn:outgoing>
       <bpmn:outgoing>Flow_1tykdw0</bpmn:outgoing>
     </bpmn:exclusiveGateway>
@@ -289,16 +282,11 @@
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1r4dbfu" sourceRef="customerInformationReceived" targetRef="Gateway_1i87sao" />
     <bpmn:sequenceFlow id="Flow_1t0w6hs" sourceRef="ValidateDataAndCreateTicket" targetRef="Activity_0ehz785" />
-    <bpmn:sequenceFlow id="Flow_1k7rao8" sourceRef="getCreditScore" targetRef="Gateway_0odman6" />
     <bpmn:sequenceFlow id="Flow_1kp5g1n" sourceRef="Gateway_1i87sao" targetRef="Gateway_0h8t0o8" />
     <bpmn:serviceTask id="ValidateDataAndCreateTicket" name="Validate data and create ticket">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="job" />
         <zeebe:properties />
-        <zeebe:executionListeners>
-          <zeebe:executionListener eventType="start" type="startEl" />
-          <zeebe:executionListener eventType="end" type="endEl" />
-        </zeebe:executionListeners>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1uqps3a</bpmn:incoming>
       <bpmn:outgoing>Flow_1t0w6hs</bpmn:outgoing>
@@ -319,13 +307,32 @@
       <bpmn:outgoing>Flow_12o7iz6</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_0vnblrd" sourceRef="missingInformationRequest" targetRef="customerInformationReceived" />
-    <bpmn:serviceTask id="missingInformationRequest" name="Request missing information from the customer">
+    <bpmn:serviceTask id="missingInformationRequest" name="Request missing information from the customer" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="8" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="job" />
+        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="noAuth" target="authentication.type" />
+          <zeebe:input source="GET" target="method" />
+          <zeebe:input source="https://635684e19243cf412f86c4ec.mockapi.io/api/v1/totalPrice/1" target="url" />
+          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
+          <zeebe:input source="20" target="readTimeoutInSeconds" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultExpression" value="=body" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1tykdw0</bpmn:incoming>
       <bpmn:outgoing>Flow_0vnblrd</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1rybhfo" sourceRef="Event_1c61boa" targetRef="Gateway_0odman6" />
+    <bpmn:sequenceFlow id="Flow_145cnel" sourceRef="loanRequested" targetRef="Event_1c61boa" />
+    <bpmn:intermediateCatchEvent id="Event_1c61boa" name="Get credit score">
+      <bpmn:extensionElements />
+      <bpmn:incoming>Flow_145cnel</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rybhfo</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_11lms9u" messageRef="Message_3m04392" />
+    </bpmn:intermediateCatchEvent>
   </bpmn:process>
   <bpmn:message id="Message_02eoed2" name="customer_accepts_offer">
     <bpmn:extensionElements>
@@ -341,10 +348,6 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_14g551t">
       <bpmndi:BPMNShape id="Participant_0ql02t4_di" bpmnElement="Participant_0ql02t4" isHorizontal="true">
         <dc:Bounds x="160" y="260" width="1840" height="450" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1o8jedc" bpmnElement="getCreditScore">
-        <dc:Bounds x="310" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="loanRequested">
@@ -402,6 +405,12 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0j6fkc3_di" bpmnElement="missingInformationRequest">
         <dc:Bounds x="510" y="410" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rqfjrt_di" bpmnElement="Event_1c61boa">
+        <dc:Bounds x="332" y="322" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311" y="298" width="78" height="14" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1p1ub97_di" bpmnElement="Activity_0ehz785">
         <dc:Bounds x="960" y="300" width="100" height="80" />
@@ -512,10 +521,6 @@
         <di:waypoint x="1310" y="340" />
         <di:waypoint x="1350" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1myqvj5_di" bpmnElement="Flow_1myqvj5">
-        <di:waypoint x="268" y="340" />
-        <di:waypoint x="310" y="340" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1nyx4yp_di" bpmnElement="Flow_1nyx4yp">
         <di:waypoint x="1168" y="340" />
         <di:waypoint x="1210" y="340" />
@@ -568,10 +573,6 @@
         <di:waypoint x="940" y="340" />
         <di:waypoint x="960" y="340" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1k7rao8_di" bpmnElement="Flow_1k7rao8">
-        <di:waypoint x="410" y="340" />
-        <di:waypoint x="465" y="340" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1kp5g1n_di" bpmnElement="Flow_1kp5g1n">
         <di:waypoint x="695" y="340" />
         <di:waypoint x="725" y="340" />
@@ -579,6 +580,14 @@
       <bpmndi:BPMNEdge id="Flow_0vnblrd_di" bpmnElement="Flow_0vnblrd">
         <di:waypoint x="610" y="450" />
         <di:waypoint x="652" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rybhfo_di" bpmnElement="Flow_1rybhfo">
+        <di:waypoint x="368" y="340" />
+        <di:waypoint x="465" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_145cnel_di" bpmnElement="Flow_145cnel">
+        <di:waypoint x="268" y="340" />
+        <di:waypoint x="332" y="340" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1vxij6s_di" bpmnElement="Participant_10cw3k9" isHorizontal="true">
         <dc:Bounds x="160" y="740" width="300" height="60" />
@@ -596,14 +605,6 @@
         <dc:Bounds x="160" y="170" width="900" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0zbi9m1_di" bpmnElement="Flow_0zbi9m1">
-        <di:waypoint x="340" y="380" />
-        <di:waypoint x="340" y="740" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0n8pccj_di" bpmnElement="Flow_0n8pccj">
-        <di:waypoint x="380" y="740" />
-        <di:waypoint x="380" y="380" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09zzeg7_di" bpmnElement="Flow_09zzeg7">
         <di:waypoint x="250" y="230" />
         <di:waypoint x="250" y="322" />
@@ -665,6 +666,10 @@
       <bpmndi:BPMNEdge id="Flow_1ntqrd8_di" bpmnElement="Flow_1ntqrd8">
         <di:waypoint x="650" y="170" />
         <di:waypoint x="650" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01nbziz_di" bpmnElement="Flow_01nbziz">
+        <di:waypoint x="350" y="740" />
+        <di:waypoint x="350" y="358" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
