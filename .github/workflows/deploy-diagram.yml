@@ -47,5 +47,6 @@ jobs:
           ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
+          ls ../../
           zbctl deploy '../../src/main/resources/bank loan origination and processing.bpmn'
 
