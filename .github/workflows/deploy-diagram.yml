@@ -1,0 +1,51 @@
+name: Deploy Diagram to Camunda SaaS
+
+on:
+  pull_request:
+  push:
+    paths:
+      - '**/*.bpmn'
+  
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-diagram:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up zbctl
+        run: |
+          sudo apt-get update
+          npm install -g zbctl
+
+      - name: Debug environment variables
+        run: |
+          echo "ZEEBE_CLIENT_ID is ${ZEEBE_CLIENT_ID:+"set"}"
+          echo "ZEEBE_CLIENT_SECRET is ${ZEEBE_CLIENT_SECRET:+"set"}"
+
+      - name: Check zbctl status
+        env:
+          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
+          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
+          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+        run: |
+          zbctl status
+            
+            
+      - name: Deploy BPMN to Zeebe
+        env:
+          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
+          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
+          ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
+        run: |
+          zbctl deploy '../Webinar-8.6/src/main/resources/bank loan origination and processing.bpmn'
+
