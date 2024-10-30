@@ -20,8 +20,10 @@ public class Main {
             deployResources(client);
 
             for (int i = 0; i < 5; i++) {
-                long processInstanceKey = createProcessInstance(client);
-                correlateOrPublishMessage(client, processInstanceKey);
+                createProcessInstance(client, i);
+                for (int k = 0; k < 2; k++) {
+                    correlateOrPublishMessage(client, i);
+                }
             }
         }
     }
@@ -33,15 +35,15 @@ public class Main {
                 .addResourceFromClasspath("loan application form.form")
                 .addResourceFromClasspath("loan underwriting form.form")
                 .send().join().getKey();
-        System.out.println("Deployed process definition with key: " + deploymentKey);
+        System.out.println("Deployed process resources with key: " + deploymentKey);
     }
 
-    private static long createProcessInstance(ZeebeClient client) {
+    private static void createProcessInstance(ZeebeClient client, Integer i) {
         Map<String, Object> var = new HashMap<>();
         var.put("first_name", "Laya");
         var.put("last_name", "Williams");
-        var.put("email", "laya.williams@mail.mail");
-        var.put("ticketId", "134-31-1679");
+        var.put("email", "another@demo.org");
+        var.put("ticketId", "A-"+i.toString());
 
         var event = client.newCreateInstanceCommand()
                 .bpmnProcessId("loanOrigination")
@@ -49,29 +51,28 @@ public class Main {
                 .variables(var)
                 .send()
                 .join();
-        System.out.println("Process instance created with key: " + event.getProcessInstanceKey());
-        return event.getProcessInstanceKey();
+        System.out.println(i+". Process instance created with key: " + event.getProcessInstanceKey());
     }
 
-    private static void correlateOrPublishMessage(ZeebeClient client, long correlationKey) {
+    private static void correlateOrPublishMessage(ZeebeClient client, Integer correlationKey) {
         Map<String, Object> variables = new HashMap<>();
         variables.put("creditScore", 760);
 
         try {
             long instanceKey = client.newCorrelateMessageCommand()
                     .messageName("customerInformation")
-                    .correlationKey("134-31-1679")
+                    .correlationKey("A-"+correlationKey.toString())
                     .variables(variables)
                     .send().join().getProcessInstanceKey();
-            System.out.println("Message correlated to instance: " + instanceKey);
+            System.out.println(correlationKey+". Message correlated to instance: " + instanceKey);
         } catch (Exception e) {
             long messageKey = client.newPublishMessageCommand()
                     .messageName("customerInformation")
-                    .correlationKey("134-31-1679")
+                    .correlationKey("A-"+correlationKey.toString())
                     .variables(variables)
                     .timeToLive(Duration.ofHours(1))
                     .send().join().getMessageKey();
-            System.out.println("Message published with key: " + messageKey);
+            System.out.println(correlationKey+". Message published with key: " + messageKey);
         }
     }
 }
