@@ -43,7 +43,9 @@ public class Main {
         var.put("first_name", "Laya");
         var.put("last_name", "Williams");
         var.put("email", "another@demo.org");
-        var.put("ticketId", "A-"+i.toString());
+        var.put("customerId", "A-"+i.toString());
+        var.put("annual_salary", 55200);
+        var.put("tenure", 36);
 
         var event = client.newCreateInstanceCommand()
                 .bpmnProcessId("loanOrigination")
@@ -58,6 +60,10 @@ public class Main {
         Map<String, Object> variables = new HashMap<>();
         variables.put("creditScore", 760);
 
+        Map<String, Object> var = new HashMap<>();
+        var.put("current_employer", "Styles and Speed Printing LLC.");
+        var.put("monthly_debt", 1234);
+
         try {
             long instanceKey = client.newCorrelateMessageCommand()
                     .messageName("customerInformation")
@@ -69,7 +75,7 @@ public class Main {
             long messageKey = client.newPublishMessageCommand()
                     .messageName("customerInformation")
                     .correlationKey("A-"+correlationKey.toString())
-                    .variables(variables)
+                    .variables(var)
                     .timeToLive(Duration.ofHours(1))
                     .send().join().getMessageKey();
             System.out.println(correlationKey+". Message published with key: " + messageKey);
