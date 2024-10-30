@@ -19,7 +19,7 @@ public class Main {
                 .build()) {
             deployResources(client);
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 1; i++) {
                 createProcessInstance(client, i);
                 for (int k = 0; k < 2; k++) {
                     correlateOrPublishMessage(client, i);
@@ -76,7 +76,7 @@ public class Main {
                     .messageName("customerInformation")
                     .correlationKey("A-"+correlationKey.toString())
                     .variables(var)
-                    .timeToLive(Duration.ofHours(1))
+                    .timeToLive(Duration.ofMinutes(10))
                     .send().join().getMessageKey();
             System.out.println(correlationKey+". Message published with key: " + messageKey);
         }
