@@ -25,16 +25,11 @@ jobs:
           sudo apt-get update
           npm install -g zbctl
 
-      - name: Debug environment variables
-        run: |
-          echo "ZEEBE_CLIENT_ID is ${ZEEBE_CLIENT_ID:+"set"}"
-          echo "ZEEBE_CLIENT_SECRET is ${ZEEBE_CLIENT_SECRET:+"set"}"
-
       - name: Check zbctl status
         env:
-          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
-          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
-          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
+          ZEEBE_ADDRESS: '063f6ba6-d712-4b42-aab9-2a62e45efa61.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'HOVhVO73vS11c9IY4Lto7XO-qbG7P9Z0'
+          ZEEBE_CLIENT_SECRET: 'TMFkae9H~ZHs7hR90QUFFWlxG7bG9ImEys-UJw7rqz166dVdoHERNHBzH7qrk_tG'
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
           zbctl status
@@ -42,9 +37,9 @@ jobs:
             
       - name: Deploy BPMN to Zeebe
         env:
-          ZEEBE_ADDRESS: '9d44c38d-cb28-4346-971d-ace24dd4ed1b.bru-2.zeebe.camunda.io:443'
-          ZEEBE_CLIENT_ID: 'e_f8.cIz~6Kk~IUjOpW-f8yb-nKMEKMa'
-          ZEEBE_CLIENT_SECRET: 'nYO6kEtp9QHbjzh29N3iYBCyZG0pM6R8u4qOcv6ZDtvQU1aX3DZUrebjn748OWhU'
+          ZEEBE_ADDRESS: '063f6ba6-d712-4b42-aab9-2a62e45efa61.bru-2.zeebe.camunda.io:443'
+          ZEEBE_CLIENT_ID: 'HOVhVO73vS11c9IY4Lto7XO-qbG7P9Z0'
+          ZEEBE_CLIENT_SECRET: 'TMFkae9H~ZHs7hR90QUFFWlxG7bG9ImEys-UJw7rqz166dVdoHERNHBzH7qrk_tG'
           ZEEBE_AUTHORIZATION_SERVER_URL: 'https://login.cloud.camunda.io/oauth/token'
         run: |
           zbctl deploy '../Webinar-8.6/src/main/resources/bank loan origination and processing.bpmn'
