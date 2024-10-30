@@ -3,9 +3,9 @@
   "executionPlatformVersion": "8.5.0",
   "exporter": {
     "name": "Camunda Web Modeler",
-    "version": "74577ef"
+    "version": "4a86467"
   },
-  "schemaVersion": 16,
+  "schemaVersion": 17,
   "id": "Form_16l6p9i",
   "components": [
     {
@@ -19,6 +19,7 @@
       "id": "Field_0xctawe"
     },
     {
+      "label": "Address",
       "components": [
         {
           "label": "First name",
@@ -121,7 +122,6 @@
         }
       ],
       "showOutline": true,
-      "label": "Address",
       "type": "group",
       "layout": {
         "row": "Row_07hr9nq",
@@ -131,6 +131,7 @@
       "path": "address"
     },
     {
+      "label": "Contact",
       "components": [
         {
           "label": "Email",
@@ -175,7 +176,6 @@
         }
       ],
       "showOutline": true,
-      "label": "Contact",
       "type": "group",
       "layout": {
         "row": "Row_1704ab1",
@@ -185,6 +185,7 @@
       "path": "contact"
     },
     {
+      "label": "Personal Information",
       "components": [
         {
           "label": "Social Security Number",
@@ -195,7 +196,7 @@
           },
           "id": "Field_0t0pxlf",
           "key": "ssn",
-          "defaultValue": "134-31-1679"
+          "defaultValue": "134-23-4482"
         },
         {
           "subtype": "date",
@@ -213,6 +214,21 @@
           }
         },
         {
+          "label": "Monthly Debt",
+          "type": "number",
+          "layout": {
+            "row": "Row_0afadec",
+            "columns": null
+          },
+          "id": "Field_1f3eyo8",
+          "key": "monthly_debt",
+          "increment": "1234",
+          "description": "Monthly fixed expenses",
+          "validate": {
+            "required": true
+          }
+        },
+        {
           "label": "Annual Salary",
           "type": "number",
           "layout": {
@@ -224,7 +240,7 @@
           "validate": {
             "required": true
           },
-          "defaultValue": 55200
+          "description": "Pre-tax"
         },
         {
           "label": "Current employer",
@@ -236,13 +252,12 @@
           "id": "Field_097nuas",
           "key": "current_employer",
           "validate": {
-            "required": true
+            "required": false
           },
-          "defaultValue": "Styles and Speed Printing LLC."
+          "defaultValue": "Styles & Speed Printing LLC."
         }
       ],
       "showOutline": true,
-      "label": "Personal Information",
       "type": "group",
       "layout": {
         "row": "Row_1o2yh7x",
@@ -252,6 +267,7 @@
       "path": "pi"
     },
     {
+      "label": "Loan Information",
       "components": [
         {
           "label": "Amount requested",
@@ -295,7 +311,6 @@
         }
       ],
       "showOutline": true,
-      "label": "Loan Information",
       "type": "group",
       "layout": {
         "row": "Row_12f4rg9",
@@ -303,6 +318,21 @@
       },
       "id": "Field_1ttaf6g",
       "path": "loan"
+    },
+    {
+      "label": "Customer ID",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_190rhtx",
+        "columns": null
+      },
+      "id": "Field_19629v7",
+      "key": "customerId",
+      "description": "Randomly generated",
+      "defaultValue": "A0",
+      "validate": {
+        "required": true
+      }
     },
     {
       "content": "<style>\n.container {\n  margin-block: 16px;\n}\na {\n  background: lightgray;\n  color: black;\n  text-decoration: none;\n  padding: 16px;\n  border-radius: 6px\n}\n\na:link {\n  color: black;\n}\n</style>\n\n<div class=\"container\">\n  <a class=\"link\" target=\"_blank\" href=\"https://camunda.com\">Upload Pay Slip</a>\n</div>",

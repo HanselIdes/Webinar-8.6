@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="Definitions_1gz1vl1" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.28.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.6.0" camunda:diagramRelationId="9b8f3cb1-3477-40d7-a895-20ef5c12a44e">
-  <decision id="calculate_loan_results_01uhf55" name="Calculate loan results">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="calculate_loan_results_01uhf55" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Web Modeler" exporterVersion="ab01412" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" camunda:diagramRelationId="9b8f3cb1-3477-40d7-a895-20ef5c12a44e">
+  <decision id="Decision_tuystje" name="Calculate loan results">
+    <knowledgeRequirement id="KnowledgeRequirement_1xs3al3">
+      <requiredKnowledge href="#BusinessKnowledgeModel_1aw2sgz" />
+    </knowledgeRequirement>
     <decisionTable id="DecisionTable_13a7nar" hitPolicy="FIRST">
       <input id="InputClause_06gvv8y" label="credit score">
         <inputExpression id="LiteralExpression_1fq8pnd" typeRef="number">
           <text>creditScore</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1q8wtsi" label="DTI_ratio">
+        <inputExpression id="LiteralExpression_0uu8pmb" typeRef="number">
+          <text>calculate_DTI_ratio(pi.monthly_debt, pi.annual_salary)</text>
         </inputExpression>
       </input>
       <input id="Input_1" label="requested amount">
@@ -23,6 +31,9 @@
       <rule id="DecisionRule_1ci6u51">
         <inputEntry id="UnaryTests_1erdsqq">
           <text>&gt;800</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_008gqwa">
+          <text>&lt;0.3</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1kp722v">
           <text>&lt;0.7*pi.annual_salary</text>
@@ -44,6 +55,9 @@
         <inputEntry id="UnaryTests_1k6xl3m">
           <text>&gt;800</text>
         </inputEntry>
+        <inputEntry id="UnaryTests_1eh4mg7">
+          <text>&lt;0.4</text>
+        </inputEntry>
         <inputEntry id="UnaryTests_07g92ag">
           <text>&lt;0.9*pi.annual_salary</text>
         </inputEntry>
@@ -63,6 +77,9 @@
       <rule id="DecisionRule_0cqk4cc">
         <inputEntry id="UnaryTests_0ljpe6m">
           <text>[700..800]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fcfqb1">
+          <text>&lt;0.35</text>
         </inputEntry>
         <inputEntry id="UnaryTests_18t1xdn">
           <text>&lt;0.5*pi.annual_salary</text>
@@ -84,6 +101,9 @@
         <inputEntry id="UnaryTests_0d231aa">
           <text>[700..800]</text>
         </inputEntry>
+        <inputEntry id="UnaryTests_19sb2e6">
+          <text>&lt;0.45</text>
+        </inputEntry>
         <inputEntry id="UnaryTests_0zwu75n">
           <text>&lt;0.7*pi.annual_salary</text>
         </inputEntry>
@@ -103,6 +123,9 @@
       <rule id="DecisionRule_0i1ak2n">
         <inputEntry id="UnaryTests_0yltpbm">
           <text>[500..700)</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ihld11">
+          <text>&lt;0.3</text>
         </inputEntry>
         <inputEntry id="UnaryTests_1qbg7xd">
           <text>&lt;0.3*pi.annual_salary</text>
@@ -124,6 +147,9 @@
         <inputEntry id="UnaryTests_1nazr0m">
           <text>[500..700)</text>
         </inputEntry>
+        <inputEntry id="UnaryTests_1jz04a8">
+          <text>&lt;0.4</text>
+        </inputEntry>
         <inputEntry id="UnaryTests_126y8s4">
           <text>&lt;0.5*pi.annual_salary</text>
         </inputEntry>
@@ -144,6 +170,9 @@
         <inputEntry id="UnaryTests_0yavggz">
           <text></text>
         </inputEntry>
+        <inputEntry id="UnaryTests_0a47vuz">
+          <text></text>
+        </inputEntry>
         <inputEntry id="UnaryTests_0mw3fr3">
           <text></text>
         </inputEntry>
@@ -162,10 +191,27 @@
       </rule>
     </decisionTable>
   </decision>
+  <businessKnowledgeModel id="BusinessKnowledgeModel_1aw2sgz" name="calculate_DTI_ratio">
+    <variable id="InformationItem_0k100vt" name="calculate_DTI_ratio" typeRef="number" />
+    <encapsulatedLogic id="FunctionDefinition_19u306s">
+      <formalParameter name="monthly_debt" typeRef="number" />
+      <formalParameter name="annual_salary" typeRef="number" />
+      <literalExpression id="LiteralExpression_1op02ud">
+        <text>{ "monthly_salary": annual_salary / 12,  "DTI_ratio": monthly_debt / monthly_salary }.DTI_ratio</text>
+      </literalExpression>
+    </encapsulatedLogic>
+  </businessKnowledgeModel>
   <dmndi:DMNDI>
     <dmndi:DMNDiagram>
-      <dmndi:DMNShape dmnElementRef="calculate_loan_results_01uhf55">
+      <dmndi:DMNShape dmnElementRef="Decision_tuystje">
         <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_0qb260n" dmnElementRef="KnowledgeRequirement_1xs3al3">
+        <di:waypoint x="250" y="337" />
+        <di:waypoint x="250" y="180" />
+      </dmndi:DMNEdge>
+      <dmndi:DMNShape id="DMNShape_0sidiu5" dmnElementRef="BusinessKnowledgeModel_1aw2sgz">
+        <dc:Bounds height="46" width="135" x="182" y="337" />
       </dmndi:DMNShape>
     </dmndi:DMNDiagram>
   </dmndi:DMNDI>
