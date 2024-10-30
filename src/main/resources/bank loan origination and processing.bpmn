@@ -23,10 +23,6 @@
     <bpmn:messageFlow id="Flow_1rbcc7e" sourceRef="Participant_0vl257o" targetRef="Participant_069kh4a" />
     <bpmn:messageFlow id="Flow_1ntqrd8" sourceRef="Participant_069kh4a" targetRef="Participant_0vl257o" />
     <bpmn:messageFlow id="Flow_01nbziz" sourceRef="Participant_10cw3k9" targetRef="Event_1c61boa" />
-    <bpmn:textAnnotation id="TextAnnotation_03dccbp">
-      <bpmn:text>TODO: Add Start Event Listener</bpmn:text>
-    </bpmn:textAnnotation>
-    <bpmn:association id="Association_17i43s4" associationDirection="None" sourceRef="Gateway_0odman6" targetRef="TextAnnotation_03dccbp" />
   </bpmn:collaboration>
   <bpmn:process id="loanOrigination" name="Bank: Loan origination and processing" isExecutable="true">
     <bpmn:subProcess id="Activity_18spil4" triggeredByEvent="true">
@@ -65,6 +61,11 @@
       </bpmn:timerEventDefinition>
     </bpmn:boundaryEvent>
     <bpmn:intermediateCatchEvent id="customerInformationReceived" name="Customer information received">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=false" target="additionalCheck" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
       <bpmn:incoming>Flow_0vnblrd</bpmn:incoming>
       <bpmn:outgoing>Flow_1r4dbfu</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0wbei0k" messageRef="Message_3m04392" />
@@ -106,7 +107,8 @@
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
     </bpmn:subProcess>
-    <bpmn:exclusiveGateway id="Gateway_0odman6" name="Do we need more data?" default="Flow_0gr6q5q">
+    <bpmn:exclusiveGateway id="Gateway_0odman6" name="Do we need more data?">
+      <bpmn:documentation>Start EL (jobType: "startEl") for gateway to check if we need more data</bpmn:documentation>
       <bpmn:extensionElements>
         <zeebe:properties>
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;additionalCheck&#34; : false}" />
@@ -114,10 +116,10 @@
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_12o7iz6</bpmn:incoming>
       <bpmn:incoming>Flow_1rybhfo</bpmn:incoming>
-      <bpmn:outgoing>Flow_0gr6q5q</bpmn:outgoing>
       <bpmn:outgoing>Flow_1tykdw0</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1k6vfq9</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:exclusiveGateway id="Gateway_0h8t0o8" name="Enough data?" default="Flow_1uqps3a">
+    <bpmn:exclusiveGateway id="Gateway_0h8t0o8" name="Enough data?">
       <bpmn:incoming>Flow_1kp5g1n</bpmn:incoming>
       <bpmn:outgoing>Flow_1uqps3a</bpmn:outgoing>
       <bpmn:outgoing>Flow_12o7iz6</bpmn:outgoing>
@@ -139,15 +141,15 @@
     <bpmn:sequenceFlow id="Flow_1t0w6hs" sourceRef="ValidateDataAndCreateTicket" targetRef="Activity_0ehz785" />
     <bpmn:sequenceFlow id="Flow_1ythlix" sourceRef="Event_0oxv702" targetRef="Event_1pq5rfu" />
     <bpmn:exclusiveGateway id="Gateway_1i87sao">
-      <bpmn:incoming>Flow_0gr6q5q</bpmn:incoming>
       <bpmn:incoming>Flow_1r4dbfu</bpmn:incoming>
+      <bpmn:incoming>Flow_1k6vfq9</bpmn:incoming>
       <bpmn:outgoing>Flow_1kp5g1n</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:intermediateCatchEvent id="Event_1c61boa" name="Get credit score">
       <bpmn:extensionElements>
-        <zeebe:ioMapping>
-          <zeebe:output source="=760" target="creditScore" />
-        </zeebe:ioMapping>
+        <zeebe:properties>
+          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;creditScore&#34;:760,&#10;&#34;additionalCheck&#34;: false}" />
+        </zeebe:properties>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_145cnel</bpmn:incoming>
       <bpmn:outgoing>Flow_1rybhfo</bpmn:outgoing>
@@ -271,42 +273,21 @@
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="Form_16l6p9i" />
         <zeebe:properties>
-          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;address&#34;: {&#10;    &#34;first_name&#34;: &#34;Laya&#34;,&#10;    &#34;last_name&#34;: &#34;Williams&#34;,&#10;    &#34;address_1&#34;: &#34;123 Anywhere Dr&#34;,&#10;    &#34;address_2&#34;: &#34;&#34;,&#10;    &#34;city&#34;: &#34;Raleigh&#34;,&#10;    &#34;zip_code&#34;: &#34;27697&#34;,&#10;    &#34;state&#34;: &#34;North Carolina&#34;,&#10;    &#34;country&#34;: &#34;USA&#34;&#10;  },&#10;  &#34;contact&#34;: {&#10;    &#34;email&#34;: &#34;laya.williams@mail.mail&#34;,&#10;    &#34;phone&#34;: &#34;+4930664040900&#34;,&#10;    &#34;mobile&#34;: &#34;+4930664040900&#34;&#10;  },&#10;  &#34;pi&#34;: {&#10;    &#34;ssn&#34;: &#34;134-31-1679&#34;,&#10;    &#34;date_of_birth&#34;: null,&#10;    &#34;annual_salary&#34;: 55200,&#10;    &#34;current_employer&#34;: &#34;Styles and Speed Printing LLC.&#34;&#10;  },&#10;  &#34;loan&#34;: {&#10;    &#34;amount&#34;: 25000,&#10;    &#34;tenure&#34;: 36&#10;  }&#10;}" />
+          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;address&#34;: {&#10;    &#34;first_name&#34;: &#34;Laya&#34;,&#10;    &#34;last_name&#34;: &#34;Williams&#34;,&#10;    &#34;address_1&#34;: &#34;123 Anywhere Dr&#34;,&#10;    &#34;address_2&#34;: &#34;&#34;,&#10;    &#34;city&#34;: &#34;Raleigh&#34;,&#10;    &#34;zip_code&#34;: &#34;27697&#34;,&#10;    &#34;state&#34;: &#34;North Carolina&#34;,&#10;    &#34;country&#34;: &#34;USA&#34;&#10;  },&#10;  &#34;contact&#34;: {&#10;    &#34;email&#34;: &#34;another@demo.org&#34;,&#10;    &#34;phone&#34;: &#34;+4930664040900&#34;,&#10;    &#34;mobile&#34;: &#34;+4930664040900&#34;&#10;  },&#10;  &#34;pi&#34;: {&#10;    &#34;ssn&#34;: &#34;134-31-1679&#34;,&#10;    &#34;date_of_birth&#34;: null,&#10;    &#34;annual_salary&#34;: 55200,&#10;    &#34;monthly_debt&#34;:1234,&#10;    &#34;current_employer&#34;: &#34;Styles and Speed Printing LLC.&#34;&#10;  },&#10;  &#34;loan&#34;: {&#10;    &#34;amount&#34;: 25000,&#10;    &#34;tenure&#34;: 36&#10;  }&#10;}" />
+          <zeebe:property name="publicAccess" value="true" />
         </zeebe:properties>
-        <zeebe:ioMapping>
-          <zeebe:output source="=8675309" target="customerId" />
-        </zeebe:ioMapping>
       </bpmn:extensionElements>
       <bpmn:outgoing>Flow_145cnel</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sequenceFlow id="Flow_12o7iz6" name="No" sourceRef="Gateway_0h8t0o8" targetRef="Gateway_0odman6">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_0gr6q5q" name="No" sourceRef="Gateway_0odman6" targetRef="Gateway_1i87sao" />
     <bpmn:serviceTask id="Activity_0neec1e" name="Provide loan">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="job" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_08s2y8v</bpmn:incoming>
       <bpmn:outgoing>Flow_0t0fgj1</bpmn:outgoing>
-    </bpmn:serviceTask>
-    <bpmn:serviceTask id="missingInformationRequest" name="Request missing information from the customer" zeebe:modelerTemplate="io.camunda.connectors.HttpJson.v2" zeebe:modelerTemplateVersion="8" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgiIGhlaWdodD0iMTgiIHZpZXdCb3g9IjAgMCAxOCAxOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTE3LjAzMzUgOC45OTk5N0MxNy4wMzM1IDEzLjQ0NzUgMTMuNDI4MSAxNy4wNTI5IDguOTgwNjUgMTcuMDUyOUM0LjUzMzE2IDE3LjA1MjkgMC45Mjc3NjUgMTMuNDQ3NSAwLjkyNzc2NSA4Ljk5OTk3QzAuOTI3NzY1IDQuNTUyNDggNC41MzMxNiAwLjk0NzA4MyA4Ljk4MDY1IDAuOTQ3MDgzQzEzLjQyODEgMC45NDcwODMgMTcuMDMzNSA0LjU1MjQ4IDE3LjAzMzUgOC45OTk5N1oiIGZpbGw9IiM1MDU1NjIiLz4KPHBhdGggZD0iTTQuOTMxMjYgMTQuMTU3MUw2Ljc4MTA2IDMuNzE0NzFIMTAuMTM3NUMxMS4xOTE3IDMuNzE0NzEgMTEuOTgyNCAzLjk4MzIzIDEyLjUwOTUgNC41MjAyN0MxMy4wNDY1IDUuMDQ3MzYgMTMuMzE1IDUuNzMzNTggMTMuMzE1IDYuNTc4OTJDMTMuMzE1IDcuNDQ0MTQgMTMuMDcxNCA4LjE1NTIyIDEyLjU4NDEgOC43MTIxNUMxMi4xMDY3IDkuMjU5MTMgMTEuNDU1MyA5LjYzNzA1IDEwLjYyOTggOS44NDU5TDEyLjA2MTkgMTQuMTU3MUgxMC4zMzE1TDkuMDMzNjQgMTAuMDI0OUg3LjI0MzUxTDYuNTEyNTQgMTQuMTU3MUg0LjkzMTI2Wk03LjQ5NzExIDguNTkyODFIOS4yNDI0OEM5Ljk5ODMyIDguNTkyODEgMTAuNTkwMSA4LjQyMzc0IDExLjAxNzcgOC4wODU2MUMxMS40NTUzIDcuNzM3NTMgMTEuNjc0MSA3LjI2NTEzIDExLjY3NDEgNi42Njg0MkMxMS42NzQxIDYuMTkxMDYgMTEuNTI0OSA1LjgxODExIDExLjIyNjUgNS41NDk1OUMxMC45MjgyIDUuMjcxMTMgMTAuNDU1OCA1LjEzMTkgOS44MDkzNiA1LjEzMTlIOC4xMDg3NEw3LjQ5NzExIDguNTkyODFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K">
-      <bpmn:extensionElements>
-        <zeebe:taskDefinition type="io.camunda:http-json:1" retries="3" />
-        <zeebe:ioMapping>
-          <zeebe:input source="noAuth" target="authentication.type" />
-          <zeebe:input source="GET" target="method" />
-          <zeebe:input source="https://635684e19243cf412f86c4ec.mockapi.io/api/v1/totalPrice/1" target="url" />
-          <zeebe:input source="20" target="connectionTimeoutInSeconds" />
-          <zeebe:input source="20" target="readTimeoutInSeconds" />
-        </zeebe:ioMapping>
-        <zeebe:taskHeaders>
-          <zeebe:header key="resultExpression" value="=body" />
-          <zeebe:header key="retryBackoff" value="PT0S" />
-        </zeebe:taskHeaders>
-      </bpmn:extensionElements>
-      <bpmn:incoming>Flow_1tykdw0</bpmn:incoming>
-      <bpmn:outgoing>Flow_0vnblrd</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sendTask id="Activity_0ii025u" name="Send confirmation mail">
       <bpmn:extensionElements>
@@ -330,7 +311,7 @@
     </bpmn:sendTask>
     <bpmn:serviceTask id="ValidateDataAndCreateTicket" name="Validate data and create ticket">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="job" />
+        <zeebe:taskDefinition type="job1" />
         <zeebe:properties>
           <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;ticketId&#34;:12345678459}" />
         </zeebe:properties>
@@ -338,10 +319,22 @@
       <bpmn:incoming>Flow_1uqps3a</bpmn:incoming>
       <bpmn:outgoing>Flow_1t0w6hs</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1uqps3a" name="Yes" sourceRef="Gateway_0h8t0o8" targetRef="ValidateDataAndCreateTicket" />
+    <bpmn:sequenceFlow id="Flow_1uqps3a" name="Yes" sourceRef="Gateway_0h8t0o8" targetRef="ValidateDataAndCreateTicket">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1tykdw0" name="Yes" sourceRef="Gateway_0odman6" targetRef="missingInformationRequest">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1k6vfq9" name="No" sourceRef="Gateway_0odman6" targetRef="Gateway_1i87sao">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:serviceTask id="missingInformationRequest" name="Request missing information from the customer">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="job" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1tykdw0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0vnblrd</bpmn:outgoing>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmn:message id="Message_02eoed2" name="customer_accepts_offer">
     <bpmn:extensionElements>
@@ -474,9 +467,6 @@
       <bpmndi:BPMNShape id="Activity_0p7ngle_di" bpmnElement="Activity_0neec1e">
         <dc:Bounds x="1570" y="300" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0j6fkc3_di" bpmnElement="missingInformationRequest">
-        <dc:Bounds x="520" y="430" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_10q25hr_di" bpmnElement="Activity_0ii025u">
         <dc:Bounds x="1790" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
@@ -488,6 +478,9 @@
       <bpmndi:BPMNShape id="Activity_0lvzmsp_di" bpmnElement="ValidateDataAndCreateTicket">
         <dc:Bounds x="840" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ndn1pq_di" bpmnElement="missingInformationRequest">
+        <dc:Bounds x="520" y="430" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0oi6owt_di" bpmnElement="Event_0oi6owt">
         <dc:Bounds x="1022" y="362" width="36" height="36" />
@@ -576,13 +569,6 @@
           <dc:Bounds x="613" y="272" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0gr6q5q_di" bpmnElement="Flow_0gr6q5q">
-        <di:waypoint x="515" y="340" />
-        <di:waypoint x="645" y="340" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="533" y="322" width="15" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1uqps3a_di" bpmnElement="Flow_1uqps3a">
         <di:waypoint x="775" y="340" />
         <di:waypoint x="840" y="340" />
@@ -596,6 +582,13 @@
         <di:waypoint x="520" y="470" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="481" y="414" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k6vfq9_di" bpmnElement="Flow_1k6vfq9">
+        <di:waypoint x="515" y="340" />
+        <di:waypoint x="645" y="340" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="573" y="322" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1vxij6s_di" bpmnElement="Participant_10cw3k9" isHorizontal="true">
@@ -614,14 +607,6 @@
         <dc:Bounds x="160" y="170" width="900" height="60" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="TextAnnotation_03dccbp_di" bpmnElement="TextAnnotation_03dccbp">
-        <dc:Bounds x="370" y="240" width="100" height="55" />
-        <bpmndi:BPMNLabel />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_17i43s4_di" bpmnElement="Association_17i43s4">
-        <di:waypoint x="479" y="326" />
-        <di:waypoint x="453" y="295" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_09zzeg7_di" bpmnElement="Flow_09zzeg7">
         <di:waypoint x="250" y="230" />
         <di:waypoint x="250" y="322" />

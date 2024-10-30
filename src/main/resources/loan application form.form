@@ -3,7 +3,7 @@
   "executionPlatformVersion": "8.5.0",
   "exporter": {
     "name": "Camunda Web Modeler",
-    "version": "1110f25"
+    "version": "4a86467"
   },
   "schemaVersion": 17,
   "id": "Form_16l6p9i",
@@ -252,7 +252,7 @@
           "id": "Field_097nuas",
           "key": "current_employer",
           "validate": {
-            "required": true
+            "required": false
           },
           "defaultValue": "Styles & Speed Printing LLC."
         }
@@ -318,6 +318,21 @@
       },
       "id": "Field_1ttaf6g",
       "path": "loan"
+    },
+    {
+      "label": "Customer ID",
+      "type": "textfield",
+      "layout": {
+        "row": "Row_190rhtx",
+        "columns": null
+      },
+      "id": "Field_19629v7",
+      "key": "customerId",
+      "description": "Randomly generated",
+      "defaultValue": "A0",
+      "validate": {
+        "required": true
+      }
     },
     {
       "content": "<style>\n.container {\n  margin-block: 16px;\n}\na {\n  background: lightgray;\n  color: black;\n  text-decoration: none;\n  padding: 16px;\n  border-radius: 6px\n}\n\na:link {\n  color: black;\n}\n</style>\n\n<div class=\"container\">\n  <a class=\"link\" target=\"_blank\" href=\"https://camunda.com\">Upload Pay Slip</a>\n</div>",
