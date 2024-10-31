@@ -190,7 +190,7 @@
       </bpmn:sequenceFlow>
       <bpmn:businessRuleTask id="Activity_00toffi" name="Calculate loan results">
         <bpmn:extensionElements>
-          <zeebe:calledDecision decisionId="Decision_tuystje" resultVariable="loan_results" />
+          <zeebe:calledDecision decisionId="Decision_tuystje" resultVariable="loan_results" bindingType="deployment" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0f5fqcz</bpmn:incoming>
         <bpmn:outgoing>Flow_075y3tx</bpmn:outgoing>
@@ -252,7 +252,7 @@
       </bpmn:sequenceFlow>
       <bpmn:userTask id="Activity_0092kbc" name="Underwrite loan">
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_1a3j1g2" />
+          <zeebe:formDefinition formId="Form_1a3j1g2" bindingType="deployment" />
           <zeebe:userTask />
           <zeebe:taskSchedule dueDate="=date and time(now()) + duration(&#34;P7D&#34;)" />
           <zeebe:priorityDefinition priority="=if creditScore &#62;= 800 then 75 else if creditScore &#62;= 700 then 50 else 25" />
@@ -273,7 +273,7 @@
       <bpmn:extensionElements>
         <zeebe:formDefinition formId="Form_16l6p9i" />
         <zeebe:properties>
-          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#10;  &#34;address&#34;: {&#10;    &#34;first_name&#34;: &#34;Laya&#34;,&#10;    &#34;last_name&#34;: &#34;Williams&#34;,&#10;    &#34;address_1&#34;: &#34;123 Anywhere Dr&#34;,&#10;    &#34;address_2&#34;: &#34;&#34;,&#10;    &#34;city&#34;: &#34;Raleigh&#34;,&#10;    &#34;zip_code&#34;: &#34;27697&#34;,&#10;    &#34;state&#34;: &#34;North Carolina&#34;,&#10;    &#34;country&#34;: &#34;USA&#34;&#10;  },&#10;  &#34;contact&#34;: {&#10;    &#34;email&#34;: &#34;another@demo.org&#34;,&#10;    &#34;phone&#34;: &#34;+4930664040900&#34;,&#10;    &#34;mobile&#34;: &#34;+4930664040900&#34;&#10;  },&#10;  &#34;pi&#34;: {&#10;    &#34;ssn&#34;: &#34;134-31-1679&#34;,&#10;    &#34;date_of_birth&#34;: null,&#10;    &#34;annual_salary&#34;: 55200,&#10;    &#34;monthly_debt&#34;:1234,&#10;    &#34;current_employer&#34;: &#34;Styles and Speed Printing LLC.&#34;&#10;  },&#10;  &#34;loan&#34;: {&#10;    &#34;amount&#34;: 25000,&#10;    &#34;tenure&#34;: 36&#10;  }&#10;}" />
+          <zeebe:property name="camundaModeler:exampleOutputJson" value="{&#34;address&#34;:{&#34;first_name&#34;:&#34;Laya&#34;,&#34;last_name&#34;:&#34;Williams&#34;,&#34;address_1&#34;:&#34;123 Anywhere Dr&#34;,&#34;address_2&#34;:&#34;&#34;,&#34;city&#34;:&#34;Raleigh&#34;,&#34;zip_code&#34;:&#34;27697&#34;,&#34;state&#34;:&#34;North Carolina&#34;,&#34;country&#34;:&#34;USA&#34;},&#34;contact&#34;:{&#34;email&#34;:&#34;another@demo.org&#34;,&#34;phone&#34;:&#34;+4930664040900&#34;,&#34;mobile&#34;:&#34;+4930664040900&#34;},&#34;pi&#34;:{&#34;ssn&#34;:&#34;134-31-1679&#34;,&#34;date_of_birth&#34;:null,&#34;annual_salary&#34;:55200,&#34;current_employer&#34;:&#34;Styles and Speed Printing LLC.&#34;,&#34;monthly_debt&#34;:1234},&#34;loan&#34;:{&#34;amount&#34;:25000,&#34;tenure&#34;:36},&#34;customerId&#34;:&#34;A0&#34;}" />
           <zeebe:property name="publicAccess" value="true" />
         </zeebe:properties>
       </bpmn:extensionElements>

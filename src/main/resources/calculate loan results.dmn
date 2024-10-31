@@ -10,7 +10,7 @@
           <text>creditScore</text>
         </inputExpression>
       </input>
-      <input id="InputClause_1q8wtsi" label="DTI_ratio">
+      <input id="InputClause_1q8wtsi" label="DTI ratio">
         <inputExpression id="LiteralExpression_0uu8pmb" typeRef="number">
           <text>calculate_DTI_ratio(pi.monthly_debt, pi.annual_salary)</text>
         </inputExpression>
