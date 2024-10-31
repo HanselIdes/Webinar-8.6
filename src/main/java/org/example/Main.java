@@ -19,7 +19,7 @@ public class Main {
                 .build()) {
             deployResources(client);
 
-            for (int i = 0; i < 1; i++) {
+            for (int i = 0; i < 100; i++) {
                 createProcessInstance(client, i);
                 for (int k = 0; k < 2; k++) {
                     correlateOrPublishMessage(client, i);
