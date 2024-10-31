@@ -66,7 +66,7 @@
           <zeebe:output source="=false" target="additionalCheck" />
         </zeebe:ioMapping>
       </bpmn:extensionElements>
-      <bpmn:incoming>Flow_0vnblrd</bpmn:incoming>
+      <bpmn:incoming>Flow_0k3ojgl</bpmn:incoming>
       <bpmn:outgoing>Flow_1r4dbfu</bpmn:outgoing>
       <bpmn:messageEventDefinition id="MessageEventDefinition_0wbei0k" messageRef="Message_3m04392" />
     </bpmn:intermediateCatchEvent>
@@ -133,7 +133,6 @@
     <bpmn:sequenceFlow id="Flow_0h21b3d" sourceRef="Activity_0ii025u" targetRef="Event_12a1edv" />
     <bpmn:sequenceFlow id="Flow_0i2sxpr" sourceRef="Activity_0ehz785" targetRef="Event_1ym330b" />
     <bpmn:sequenceFlow id="Flow_0t0fgj1" sourceRef="Activity_0neec1e" targetRef="Event_09ign1n" />
-    <bpmn:sequenceFlow id="Flow_0vnblrd" sourceRef="missingInformationRequest" targetRef="customerInformationReceived" />
     <bpmn:sequenceFlow id="Flow_145cnel" sourceRef="loanRequested" targetRef="Event_1c61boa" />
     <bpmn:sequenceFlow id="Flow_14mj0nw" sourceRef="Activity_1qx00c8" targetRef="Activity_0ebp42o" />
     <bpmn:sequenceFlow id="Flow_1kp5g1n" sourceRef="Gateway_1i87sao" targetRef="Gateway_0h8t0o8" />
@@ -325,19 +324,38 @@
     <bpmn:sequenceFlow id="Flow_1uqps3a" name="Yes" sourceRef="Gateway_0h8t0o8" targetRef="ValidateDataAndCreateTicket">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:sequenceFlow id="Flow_1tykdw0" name="Yes" sourceRef="Gateway_0odman6" targetRef="missingInformationRequest">
+    <bpmn:sequenceFlow id="Flow_1tykdw0" name="Yes" sourceRef="Gateway_0odman6" targetRef="requestInformationEmail">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = true</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1k6vfq9" name="No" sourceRef="Gateway_0odman6" targetRef="Gateway_1i87sao">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=additionalCheck = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:serviceTask id="missingInformationRequest" name="Request missing information from the customer">
+    <bpmn:serviceTask id="requestInformationEmail" name="Request missing information from the customer" zeebe:modelerTemplate="io.camunda.connectors.email.v1" zeebe:modelerTemplateVersion="1" zeebe:modelerTemplateIcon="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXAwXzkwXzI0MjApIj4KPHBhdGggZD0iTTguMzM4MzUgOS45NTM2NUwxMC4zODk0IDEyLjAxMDRMOC4zMzI2MiAxNC4wNjcyTDkuMTQ2MTYgMTQuODc1TDEyLjAxMDcgMTIuMDEwNEw5LjE0NjE2IDkuMTQ1ODNMOC4zMzgzNSA5Ljk1MzY1WiIgZmlsbD0iYmxhY2siLz4KPHBhdGggZD0iTTEyLjM0ODggOS45NTM2NUwxNC4zOTk4IDEyLjAxMDRMMTIuMzQzIDE0LjA2NzJMMTMuMTU2NiAxNC44NzVMMTYuMDIxMiAxMi4wMTA0TDEzLjE1NjYgOS4xNDU4M0wxMi4zNDg4IDkuOTUzNjVaIiBmaWxsPSJibGFjayIvPgo8cGF0aCBkPSJNMy45NzIgMTEuNDM3NUgxLjEyNTMzVjIuNzkyMTlMNy42NzM3NiA3LjMyMzk2QzcuNzY5NjcgNy4zOTA0OSA3Ljg4MzYgNy40MjYxNCA4LjAwMDMyIDcuNDI2MTRDOC4xMTcwNSA3LjQyNjE0IDguMjMwOTggNy4zOTA0OSA4LjMyNjg5IDcuMzIzOTZMMTQuODc1MyAyLjc5MjE5VjhIMTYuMDIxMlYyLjI3MDgzQzE2LjAyMTIgMS45NjY5NCAxNS45MDA0IDEuNjc1NDkgMTUuNjg1NiAxLjQ2MDYxQzE1LjQ3MDcgMS4yNDU3MiAxNS4xNzkyIDEuMTI1IDE0Ljg3NTMgMS4xMjVIMS4xMjUzM0MwLjgyMTQzMiAxLjEyNSAwLjUyOTk4NCAxLjI0NTcyIDAuMzE1MDk5IDEuNDYwNjFDMC4xMDAyMTQgMS42NzU0OSAtMC4wMjA1MDc4IDEuOTY2OTQgLTAuMDIwNTA3OCAyLjI3MDgzVjExLjQzNzVDLTAuMDIwNTA3OCAxMS43NDE0IDAuMTAwMjE0IDEyLjAzMjggMC4zMTUwOTkgMTIuMjQ3N0MwLjUyOTk4NCAxMi40NjI2IDAuODIxNDMyIDEyLjU4MzMgMS4xMjUzMyAxMi41ODMzSDMuOTcyVjExLjQzNzVaTTEzLjYxNDkgMi4yNzA4M0w4LjAwMDMyIDYuMTU1MjFMMi4zODU3NCAyLjI3MDgzSDEzLjYxNDlaIiBmaWxsPSIjRkM1RDBEIi8+CjxwYXRoIGQ9Ik00LjI4MjEgOS45NTM2NUw2LjMzMzE0IDEyLjAxMDRMNC4yNzYzNyAxNC4wNjcyTDUuMDg5OTEgMTQuODc1TDcuOTU0NDkgMTIuMDEwNEw1LjA4OTkxIDkuMTQ1ODNMNC4yODIxIDkuOTUzNjVaIiBmaWxsPSJibGFjayIvPgo8L2c+CjxkZWZzPgo8Y2xpcFBhdGggaWQ9ImNsaXAwXzkwXzI0MjAiPgo8cmVjdCB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIGZpbGw9IndoaXRlIi8+CjwvY2xpcFBhdGg+CjwvZGVmcz4KPC9zdmc+Cg==">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="job" />
+        <zeebe:taskDefinition type="io.camunda:email:1" retries="3" />
+        <zeebe:ioMapping>
+          <zeebe:input source="simple" target="authentication.type" />
+          <zeebe:input source="demo" target="authentication.username" />
+          <zeebe:input source="demo" target="authentication.password" />
+          <zeebe:input source="smtp" target="protocol" />
+          <zeebe:input source="mail.consulting-sandbox.camunda.cloud" target="data.smtpConfig.smtpHost" />
+          <zeebe:input source="25" target="data.smtpConfig.smtpPort" />
+          <zeebe:input source="NONE" target="data.smtpConfig.smtpCryptographicProtocol" />
+          <zeebe:input source="sendEmailSmtp" target="data.smtpActionDiscriminator" />
+          <zeebe:input source="demo@demo.org" target="data.smtpAction.from" />
+          <zeebe:input source="=email" target="data.smtpAction.to" />
+          <zeebe:input source="=&#34;Customer ID: &#34;+customerId" target="data.smtpAction.subject" />
+          <zeebe:input source="test" target="data.smtpAction.body" />
+        </zeebe:ioMapping>
+        <zeebe:taskHeaders>
+          <zeebe:header key="resultVariable" value="result" />
+          <zeebe:header key="retryBackoff" value="PT0S" />
+        </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1tykdw0</bpmn:incoming>
-      <bpmn:outgoing>Flow_0vnblrd</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0k3ojgl</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_0k3ojgl" sourceRef="requestInformationEmail" targetRef="customerInformationReceived" />
   </bpmn:process>
   <bpmn:message id="Message_02eoed2" name="customer_accepts_offer">
     <bpmn:extensionElements>
@@ -353,6 +371,10 @@
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_14g551t">
       <bpmndi:BPMNShape id="Participant_0ql02t4_di" bpmnElement="Participant_0ql02t4" isHorizontal="true">
         <dc:Bounds x="160" y="260" width="1840" height="450" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1dem0cj_di" bpmnElement="requestInformationEmail">
+        <dc:Bounds x="520" y="430" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0s873x6_di" bpmnElement="Activity_18spil4" isExpanded="true">
@@ -482,9 +504,6 @@
         <dc:Bounds x="840" y="300" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0ndn1pq_di" bpmnElement="missingInformationRequest">
-        <dc:Bounds x="520" y="430" width="100" height="80" />
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0oi6owt_di" bpmnElement="Event_0oi6owt">
         <dc:Bounds x="1022" y="362" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -521,10 +540,6 @@
       <bpmndi:BPMNEdge id="Flow_0t0fgj1_di" bpmnElement="Flow_0t0fgj1">
         <di:waypoint x="1670" y="340" />
         <di:waypoint x="1712" y="340" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0vnblrd_di" bpmnElement="Flow_0vnblrd">
-        <di:waypoint x="620" y="470" />
-        <di:waypoint x="652" y="470" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_145cnel_di" bpmnElement="Flow_145cnel">
         <di:waypoint x="268" y="340" />
@@ -584,7 +599,7 @@
         <di:waypoint x="490" y="470" />
         <di:waypoint x="520" y="470" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="481" y="414" width="18" height="14" />
+          <dc:Bounds x="481" y="413" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_1k6vfq9_di" bpmnElement="Flow_1k6vfq9">
@@ -593,6 +608,10 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="573" y="322" width="15" height="14" />
         </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0k3ojgl_di" bpmnElement="Flow_0k3ojgl">
+        <di:waypoint x="620" y="470" />
+        <di:waypoint x="652" y="470" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Participant_1vxij6s_di" bpmnElement="Participant_10cw3k9" isHorizontal="true">
         <dc:Bounds x="160" y="740" width="300" height="60" />
