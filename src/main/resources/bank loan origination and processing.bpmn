@@ -190,7 +190,7 @@
       </bpmn:sequenceFlow>
       <bpmn:businessRuleTask id="Activity_00toffi" name="Calculate loan results">
         <bpmn:extensionElements>
-          <zeebe:calledDecision decisionId="Decision_tuystje" resultVariable="loan_results" bindingType="deployment" />
+          <zeebe:calledDecision decisionId="Decision_tuystje" resultVariable="loan_results" />
         </bpmn:extensionElements>
         <bpmn:incoming>Flow_0f5fqcz</bpmn:incoming>
         <bpmn:outgoing>Flow_075y3tx</bpmn:outgoing>
@@ -252,7 +252,7 @@
       </bpmn:sequenceFlow>
       <bpmn:userTask id="Activity_0092kbc" name="Underwrite loan">
         <bpmn:extensionElements>
-          <zeebe:formDefinition formId="Form_1a3j1g2" bindingType="deployment" />
+          <zeebe:formDefinition formId="Form_1a3j1g2" />
           <zeebe:userTask />
           <zeebe:taskSchedule dueDate="=date and time(now()) + duration(&#34;P7D&#34;)" />
           <zeebe:priorityDefinition priority="=if creditScore &#62;= 800 then 75 else if creditScore &#62;= 700 then 50 else 25" />
